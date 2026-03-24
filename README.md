@@ -8,9 +8,11 @@ Since fraud datasets are usually highly imbalanced, the project also focuses on 
 ## Dataset
 
 The dataset consists of credit card transaction records with multiple anonymized features.
-Target Column → Class
-0 represents Normal Transaction
-1 represents Fraud Transaction
+Target Column → Class<br>
+0 represents Normal Transaction,
+
+1 represents Fraud Transaction,
+
 The dataset is highly imbalanced, with very few fraud transactions compared to normal ones.
 
 ## Tools & Technologies Used
