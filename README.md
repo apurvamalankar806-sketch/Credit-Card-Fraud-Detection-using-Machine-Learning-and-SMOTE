@@ -66,5 +66,5 @@ The project also highlights the complete Machine Learning workflow: <br>
 - Handling class imbalance
 - Model training
 - Model evaluation
-- Performance comparison
-
+- Performance comparison <br>
+This project helped in gaining practical experience with real-world Machine Learning challenges related to imbalanced datasets and fraud detection systems.
