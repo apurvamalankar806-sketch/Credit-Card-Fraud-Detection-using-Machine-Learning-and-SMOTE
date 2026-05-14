@@ -60,4 +60,11 @@ Although overall accuracy slightly changed, the model became more useful for rea
  ## Conclusion
 This project demonstrates the importance of handling imbalanced datasets in fraud detection problems.<br>
 By applying SMOTE and evaluating the model using appropriate metrics, the fraud detection capability was improved.<br>
-The project also highlights the complete Machine Learning workflow including preprocessing, visualization, imbalance handling, model training, and evaluation.
+The project also highlights the complete Machine Learning workflow: <br>
+- Data preprocessing
+- Exploratory Data Analysis
+- Handling class imbalance
+- Model training
+- Model evaluation
+- Performance comparison
+
