@@ -31,6 +31,7 @@ Visualizations such as count plots, histograms, and correlation heatmaps were us
 The analysis showed that the dataset is highly imbalanced, which can affect model performance.
 
 ## Model Building Without SMOTE
+
 A Logistic Regression model was first trained on the original imbalanced dataset.
 The model achieved high accuracy in predicting normal transactions but failed to detect many fraud cases.
 This indicates that the model was biased towards the majority class.
@@ -39,6 +40,7 @@ This indicates that the model was biased towards the majority class.
 
 To handle class imbalance, SMOTE was applied only on the training dataset to generate synthetic fraud samples.
 The Logistic Regression model was retrained on the balanced dataset, which improved the model’s ability to detect fraud transactions.
+After applying SMOTE, the model became significantly more effective in identifying fraudulent transactions.
 
 ## Model Evaluation
 
@@ -48,7 +50,7 @@ Precision
 Recall
 F1 Score
 Accuracy alone was not considered reliable due to class imbalance.
-Recall was given more importance since missing fraud transactions can lead to financial losses.
+In fraud detection problems, Recall is considered more important because failing to identify fraudulent transactions can lead to major financial losses.
 
 ## Result Comparison
 
