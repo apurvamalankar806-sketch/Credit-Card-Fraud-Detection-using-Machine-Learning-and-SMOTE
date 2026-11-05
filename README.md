@@ -1,70 +1,65 @@
-# Credit-Card-Fraud-Detection-using-Machine-Learning-and-SMOTE
-Built a Machine Learning model to detect fraudulent credit card transactions using Logistic Regression. Applied SMOTE to handle class imbalance and evaluated model performance using precision, recall and F1-score.
+# Credit Card Fraud Detection
 
-## Objective
-The objective of this project is to build a Machine Learning model that can identify fraudulent credit card transactions.<br>
-Since fraud datasets are usually highly imbalanced, the project also focuses on improving fraud detection performance using SMOTE (Synthetic Minority Oversampling Technique).
+Detecting fraudulent card transactions in a highly imbalanced dataset. The project compares three models on precision, recall and PR-AUC, and tunes the decision threshold to reduce false alarms.
 
 ## Dataset
+284,807 transactions from European cardholders, of which 492 (0.17%) are fraud. Features V1 to V28 are anonymised PCA components. The remaining columns are `Time`, `Amount` and the label `Class` (1 = fraud).
 
-The dataset consists of credit card transaction records with multiple anonymized features.
-Target Column → Class<br>
-0 represents Normal Transaction,
+The data file is about 150 MB, so it is not included in this repository. Download `creditcard.csv` from [Kaggle](https://www.kaggle.com/datasets/mlg-ulb/creditcardfraud) and place it in the same folder as the notebook.
 
-1 represents Fraud Transaction,
+## Why Accuracy Is Not Used
+Because only 0.17% of transactions are fraud, a model that labels every transaction as legitimate would score about 99.8% accuracy while detecting no fraud. Models are therefore compared on precision, recall and PR-AUC for the fraud class.
 
-The dataset is highly imbalanced, with very few fraud transactions compared to normal ones.
+## Modelling Approach
+1. **Logistic Regression (baseline).** Trained first on the original, imbalanced data. It reached very high accuracy, but almost entirely from classifying normal transactions correctly. At the default threshold it missed 35 of the 98 fraud cases (recall 0.64), which shows a bias towards the majority class.
+2. **Logistic Regression with SMOTE.** SMOTE generates synthetic fraud examples in the training set only, so the model sees fraud more often. The validation and test sets are left untouched to reflect real conditions. Recall rose to 0.90, but precision fell to 0.06 because many legitimate transactions were flagged.
+3. **Random Forest (class-weighted).** A tree-based model that can capture non-linear patterns. Class weights make each fraud case count more during training, which tests whether the bias can be handled without resampling.
+4. **Threshold tuning.** Each model's decision threshold was chosen on a separate validation set (highest precision with recall of at least 0.80), so the models can be compared fairly at a similar level of recall.
 
-## Tools & Technologies Used
--Python <br>
--Pandas <br>
--NumPy <br>
--Matplotlib <br>
--Seaborn <br>
--Scikit-learn <br>
--Imbalanced-learn (SMOTE)
+## Pipeline
+1. Stratified train, validation and test split with a fixed random seed.
+2. Feature scaling fitted on the training set only.
+3. SMOTE applied to the scaled training set only.
+4. Final comparison on the held-out test set of 56,962 transactions, 98 of them fraud.
 
- ## Exploratory Data Analysis:
- 
-Exploratory Data Analysis was performed to understand the distribution of transactions.<br>
-Visualizations such as count plots, histograms, and correlation heatmaps were used.<br>
-The analysis showed that the dataset is highly imbalanced, which can affect model performance.
+## Results
 
-## Model Building Without SMOTE
+At the default threshold (0.5):
 
--A Logistic Regression model was first trained on the original imbalanced dataset.<br>
--The model achieved high accuracy in predicting normal transactions but failed to detect many fraud cases.<br>
--This indicates that the model was biased towards the majority class.
+| Model | Precision | Recall |
+|---|---|---|
+| Logistic Regression | 0.83 | 0.64 |
+| Logistic Regression + SMOTE | 0.06 | 0.90 |
+| Random Forest | 0.96 | 0.75 |
 
-## Model Building With SMOTE
+After threshold tuning:
 
--To handle class imbalance, SMOTE was applied only on the training dataset to generate synthetic fraud samples.<br>
--The Logistic Regression model was retrained on the balanced dataset, which improved the model’s ability to detect fraud transactions.<br>
--After applying SMOTE, the model became significantly more effective in identifying fraudulent transactions.
+| Model | Precision | Recall | False Alarms | PR-AUC |
+|---|---|---|---|---|
+| Logistic Regression | 0.61 | 0.85 | 54 | 0.745 |
+| Logistic Regression + SMOTE | 0.48 | 0.88 | 92 | 0.724 |
+| Random Forest | 0.71 | 0.87 | 35 | 0.851 |
 
-## Model Evaluation
+## Key Findings
+- SMOTE raised recall at the default threshold, but precision fell to 0.06, which means about 1,400 legitimate transactions were flagged as fraud.
+- After threshold tuning, all three models reached similar recall (0.85 to 0.88), and SMOTE gave no clear benefit. Choosing the threshold mattered more than resampling.
+- The Random Forest had the highest PR-AUC and the best precision at comparable recall, with 35 false alarms among 56,864 legitimate transactions. It is the selected model.
 
--Model performance was evaluated using:<br>
--Confusion Matrix <br>
--Precision  <br>
--Recall <br>
--F1 Score <br>
--Accuracy alone was not considered reliable due to class imbalance. <br>
-In fraud detection problems, Recall is considered more important because failing to identify fraudulent transactions can lead to major financial losses.
+## Limitations
+- The test set contains only 98 fraud cases, so recall differences of a few points correspond to a handful of transactions.
+- Results come from a single split and were not cross-validated.
+- The threshold depends on the recall target. In practice it should be set from the relative cost of a missed fraud versus a false alarm.
+- Features are anonymised, so the model's decisions cannot be explained in business terms.
 
-## Result Comparison
+## Tech Stack
+Python, Pandas, NumPy, Scikit-learn, imbalanced-learn, Matplotlib, Seaborn
 
-After applying SMOTE, the model showed improved recall for the fraud class, meaning it was able to detect more fraudulent transactions.<br>
-Although overall accuracy slightly changed, the model became more useful for real-world fraud detection.
+## Run Locally
+```bash
+pip install -r requirements.txt
+jupyter notebook Credit_Card__FraudDetection_Project.ipynb
+```
 
- ## Conclusion
-This project demonstrates the importance of handling imbalanced datasets in fraud detection problems.<br>
-By applying SMOTE and evaluating the model using appropriate metrics, the fraud detection capability was improved.<br>
-The project also highlights the complete Machine Learning workflow: <br>
-- Data preprocessing
-- Exploratory Data Analysis
-- Handling class imbalance
-- Model training
-- Model evaluation
-- Performance comparison <br>
-This project helped in gaining practical experience with real-world Machine Learning challenges related to imbalanced datasets and fraud detection systems.
+## Repository Contents
+- `Credit_Card__FraudDetection_Project.ipynb`: full analysis and modelling
+- `requirements.txt`: Python dependencies
